@@ -1,13 +1,83 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>v-scroll</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>v-scroll 演示</title>
+  <!-- 
+    Import Map 配置
+    第三方用户可以通过修改这里来切换主题
+    例如将 "$/" 映射到 "/custom-theme/"
+  -->
+  <script type="importmap">
+    {
+      "imports": {
+        "$/": "/dist/theme/" 
+      }
+    }
+  </script>
+  <style>
+    .container { height: 400px; width: 400px; margin: 50px auto; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <v-scroll>
+    <p>Welcome to vibe 0</p>
+    <p>Welcome to vibe 1</p>
+    <p>Welcome to vibe 2</p>
+    <p>Welcome to vibe 3</p>
+    <p>Welcome to vibe 4</p>
+    <p>Welcome to vibe 5</p>
+    <p>Welcome to vibe 6</p>
+    <p>Welcome to vibe 7</p>
+    <p>Welcome to vibe 8</p>
+    <p>Welcome to vibe 9</p>
+    <p>Welcome to vibe 10</p>
+    <p>Welcome to vibe 11</p>
+    <p>Welcome to vibe 12</p>
+    <p>Welcome to vibe 13</p>
+    <p>Welcome to vibe 14</p>
+    <p>Welcome to vibe 15</p>
+    <p>Welcome to vibe 16</p>
+    <p>Welcome to vibe 17</p>
+    <p>Welcome to vibe 18</p>
+    <p>Welcome to vibe 19</p>
+    <p>Welcome to vibe 20</p>
+    <p>Welcome to vibe 21</p>
+    <p>Welcome to vibe 22</p>
+    <p>Welcome to vibe 23</p>
+    <p>Welcome to vibe 24</p>
+    <p>Welcome to vibe 25</p>
+    <p>Welcome to vibe 26</p>
+    <p>Welcome to vibe 27</p>
+    <p>Welcome to vibe 28</p>
+    <p>Welcome to vibe 29</p>
+    <p>Welcome to vibe 30</p>
+    <p>Welcome to vibe 31</p>
+    <p>Welcome to vibe 32</p>
+    <p>Welcome to vibe 33</p>
+    <p>Welcome to vibe 34</p>
+    <p>Welcome to vibe 35</p>
+    <p>Welcome to vibe 36</p>
+    <p>Welcome to vibe 37</p>
+    <p>Welcome to vibe 38</p>
+    <p>Welcome to vibe 39</p>
+    <p>Welcome to vibe 40</p>
+    <p>Welcome to vibe 41</p>
+    <p>Welcome to vibe 42</p>
+    <p>Welcome to vibe 43</p>
+    <p>Welcome to vibe 44</p>
+    <p>Welcome to vibe 45</p>
+    <p>Welcome to vibe 46</p>
+    <p>Welcome to vibe 47</p>
+    <p>Welcome to vibe 48</p>
+    <p>Welcome to vibe 49</p>
+    <p>Welcome to vibe 50</p>
+  </v-scroll>
+</div>
+<script type="module">
+  // 导入组件
+  import './src/main.js';
+</script>
+</body>
 </html>
