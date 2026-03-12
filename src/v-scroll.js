@@ -1,16 +1,29 @@
 
-  /**
-   * v-scroll 组件
-   */
-  import CSS from '$/v-scroll.js';
-  import scrollSvgRaw from './assets/scroll.svg?raw';
-  import grabSvgRaw from './assets/grab.svg?raw';
-  // 工具函数
-  function svgToDataUri(svgString) {
-    const cleanedSvg = svgString.replace(/\n/g, '').replace(/\s+/g, ' ').trim();
-    return `data:image/svg+xml,${encodeURIComponent(cleanedSvg)}`;
+/**
+ * v-scroll 组件
+ */
+import CSS from '$/v-scroll.js';
+import scrollSvgRaw from './assets/scroll.svg?raw';
+import grabSvgRaw from './assets/grab.svg?raw';
+
+function svgToDataUri(svgString) {
+  const cleanedSvg = svgString.replace(/\n/g, '').replace(/\s+/g, ' ').trim();
+  return `data:image/svg+xml,${encodeURIComponent(cleanedSvg)}`;
+}
+
+// 全局样式注入：将通过 Import Map 映射到的 "$/v-scroll.js" 导出的 CSS 字符串
+// 注入到 document.head 中，作为全局样式，避免写入 Shadow DOM。
+if (typeof document !== 'undefined' && typeof CSS === 'string' && CSS.length > 0) {
+  const STYLE_ID = 'v-scroll-global-style';
+  if (!document.getElementById(STYLE_ID)) {
+    const styleEl = document.createElement('style');
+    styleEl.id = STYLE_ID;
+    styleEl.textContent = CSS;
+    document.head.appendChild(styleEl);
   }
-  class VScroll extends HTMLElement {
+}
+
+class VScroll extends HTMLElement {
     static observedAttributes = ['theme', 'disabled'];
     constructor() {
       super();
@@ -40,9 +53,9 @@
       if (this._initialized) return;
       this._initialized = true;
       this._createStructure();
-      this._injectStyles();
       this._initObservers();
       this._initEventListeners();
+      this._initCursors();
       requestAnimationFrame(() => this._updateScrollbar());
     }
     disconnectedCallback() {
@@ -63,64 +76,16 @@
       this._thumb.setAttribute('tabindex', '0');
       this._scrollbar.appendChild(this._thumb);
       this._view.appendChild(contentWrapper);
-      this._view.appendChild(this._scrollbar);
+      // 将滚动条轨道从滚动容器中分离，直接挂在 shadowRoot，
+      // 避免随内容一起滚动导致“消失在容器中”。
       this.shadowRoot.appendChild(this._view);
+      this.shadowRoot.appendChild(this._scrollbar);
     }
-    _injectStyles() {
-      const style = document.createElement('style');
-      style.textContent = CSS;
-      this.shadowRoot.appendChild(style);
-      // 关键样式回退 (收缩 right:2px, 展开 right:0)
-      const criticalStyles = document.createElement('style');
-      criticalStyles.textContent = `
-        :host { display: block; position: relative; height: 100%; width: 100%; }
-        [part="scroll"] { height: 100%; overflow: auto; scrollbar-width: none; }
-        [part="scroll"]::-webkit-scrollbar { display: none; }
-        /* 轨道默认 right: 2px */
-        [part="bar"] { 
-          position: absolute; right: 2px; top: 0; bottom: 0; 
-          width: 4px; background: transparent; 
-          pointer-events: none; border-radius: 0;
-          box-sizing: border-box;
-          border-left: 1px solid transparent;
-          transition: width 0.2s ease-out, background 0.2s ease-out, border-color 0.2s ease-out, right 0.2s ease-out;
-        }
-        :host([data-scrolling]) [part="bar"] { pointer-events: auto; }
-        /* 滑块 */
-        [part="thumb"] { 
-          position: absolute; right: 0; 
-          width: 4px; 
-          background: rgba(0,0,0,0.35); 
-          border-radius: 3px; 
-          min-height: 20px; 
-          opacity: 0;
-          transition: opacity 0.25s ease, background 0.2s ease, right 0.2s ease-out;
-        }
-        /* 滚动状态 */
-        :host([data-scrolling]) [part="thumb"] { opacity: 1; }
-        /* 悬停/拖拽状态：right: 0 紧贴右侧 */
-        :host([data-hovering-thumb]) [part="bar"] { 
-          right: 0; width: 14px; background: rgba(0,0,0,0.05); pointer-events: auto; 
-          border-left-color: rgba(0,0,0,0.1); 
-        }
-        :host([data-hovering-thumb]) [part="thumb"] { opacity: 1; right: 5px; background: rgba(0,0,0,0.15); }
-        :host([data-dragging]) [part="bar"] { 
-          right: 0; width: 14px; background: rgba(0,0,0,0.05); pointer-events: auto; 
-          border-left-color: rgba(0,0,0,0.1); 
-        }
-        :host([data-dragging]) [part="thumb"] { opacity: 1; right: 5px; background: rgba(0,0,0,0.6); }
-      `;
-      this.shadowRoot.appendChild(criticalStyles);
-      // 光标样式
+    _initCursors() {
       const scrollCursor = svgToDataUri(scrollSvgRaw);
       const grabCursor = svgToDataUri(grabSvgRaw);
-      const cursorStyle = document.createElement('style');
-      cursorStyle.textContent = `
-        [part="thumb"] { cursor: url('${scrollCursor}') 12 12, pointer; }
-        [part="thumb"][data-dragging="true"] { cursor: url('${grabCursor}') 12 12, grabbing !important; }
-        :host([data-dragging="true"]) { cursor: url('${grabCursor}') 12 12, grabbing !important; }
-      `;
-      this.shadowRoot.appendChild(cursorStyle);
+      this.style.setProperty('--v-scroll-cursor-default', `url('${scrollCursor}') 12 12, pointer`);
+      this.style.setProperty('--v-scroll-cursor-dragging', `url('${grabCursor}') 12 12, grabbing`);
     }
     _initObservers() {
       this._resizeObserver = new ResizeObserver(this._handleResize);
@@ -186,6 +151,10 @@
       this._thumb.setPointerCapture(e.pointerId);
       document.addEventListener('pointermove', this._handlePointerMove, { passive: false });
       document.addEventListener('pointerup', this._handlePointerUp);
+      const grabCursor = this.style.getPropertyValue('--v-scroll-cursor-dragging');
+      if (grabCursor) {
+        document.body.style.cursor = grabCursor;
+      }
       document.body.style.userSelect = 'none';
     }
     _handlePointerMove(e) {
@@ -211,6 +180,7 @@
       try { this._thumb.releasePointerCapture(e.pointerId); } catch {}
       document.removeEventListener('pointermove', this._handlePointerMove);
       document.removeEventListener('pointerup', this._handlePointerUp);
+      document.body.style.cursor = '';
       document.body.style.userSelect = '';
       this._scrollbar.addEventListener('pointerleave', this._handleTrackLeave);
     }
@@ -246,7 +216,3 @@
   }
   if (!customElements.get('v-scroll')) { customElements.define('v-scroll', VScroll); }
   export default VScroll;
-
-
- 
-
