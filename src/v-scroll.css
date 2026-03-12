@@ -1,35 +1,35 @@
 /* 公共 v-scroll 样式（外部样式表，通过 ::part 暴露内部结构） */
 
 v-scroll {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  /* 尺寸变量 */
-  --v-scroll-thumb-width: 4px;
-  --v-scroll-track-expanded-width: 14px;
-  /* 颜色变量（可由使用方覆盖，实现“变量穿透”） */
-  --v-scroll-thumb-bg: rgba(0, 0, 0, 0.35);
-  --v-scroll-thumb-bg-hover: rgba(0, 0, 0, 0.15);
-  --v-scroll-thumb-bg-active: rgba(0, 0, 0, 0.6);
-  --v-scroll-track-bg: rgba(0, 0, 0, 0.05);
-  --v-scroll-track-border-color: rgba(0, 0, 0, 0.1);
-  --v-scroll-thumb-radius: 3px;
-  --v-scroll-thumb-min-height: 20px;
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	/* 尺寸变量 */
+	--v-scroll-thumb-width: 4px;
+	--v-scroll-track-expanded-width: 14px;
+	/* 颜色变量（可由使用方覆盖，实现“变量穿透”） */
+	--v-scroll-thumb-bg: rgba(0, 0, 0, 0.35);
+	--v-scroll-thumb-bg-hover: rgba(0, 0, 0, 0.15);
+	--v-scroll-thumb-bg-active: rgba(0, 0, 0, 0.6);
+	--v-scroll-track-bg: rgba(0, 0, 0, 0.05);
+	--v-scroll-track-border-color: rgba(0, 0, 0, 0.1);
+	--v-scroll-thumb-radius: 3px;
+	--v-scroll-thumb-min-height: 20px;
 }
 
 /* 滚动容器 */
 v-scroll::part(scroll) {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 v-scroll::part(scroll)::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 /*
@@ -38,75 +38,75 @@ v-scroll::part(scroll)::-webkit-scrollbar {
  * 增加 right 属性的过渡
  */
 v-scroll::part(bar) {
-  position: absolute;
-  right: 2px;
-  top: 0;
-  bottom: 0;
-  width: var(--v-scroll-thumb-width);
-  background: transparent;
-  pointer-events: none;
-  border-radius: 0;
-  z-index: 10;
-  box-sizing: border-box;
-  border-left: 1px solid transparent;
-  transition:
-    width 0.2s ease-out,
-    background 0.2s ease-out,
-    border-color 0.2s ease-out,
-    right 0.2s ease-out;
+	position: absolute;
+	right: 2px;
+	top: 0;
+	bottom: 0;
+	width: var(--v-scroll-thumb-width);
+	background: transparent;
+	pointer-events: none;
+	border-radius: 0;
+	z-index: 10;
+	box-sizing: border-box;
+	border-left: 1px solid transparent;
+	transition:
+		width 0.2s ease-out,
+		background 0.2s ease-out,
+		border-color 0.2s ease-out,
+		right 0.2s ease-out;
 }
 
 /* 滚动时开启事件监听 */
 v-scroll[data-scrolling]::part(bar) {
-  pointer-events: auto;
+	pointer-events: auto;
 }
 
 /* 滚动条滑块 */
 v-scroll::part(thumb) {
-  position: absolute;
-  right: 0;
-  width: var(--v-scroll-thumb-width);
-  min-height: var(--v-scroll-thumb-min-height);
-  background: var(--v-scroll-thumb-bg);
-  border-radius: var(--v-scroll-thumb-radius);
-  opacity: 0;
-  transition:
-    opacity 0.25s ease,
-    background-color 0.2s ease,
-    right 0.2s ease-out;
-  cursor: var(--v-scroll-cursor-default, pointer);
+	position: absolute;
+	right: 0;
+	width: var(--v-scroll-thumb-width);
+	min-height: var(--v-scroll-thumb-min-height);
+	background: var(--v-scroll-thumb-bg);
+	border-radius: var(--v-scroll-thumb-radius);
+	opacity: 0;
+	transition:
+		opacity 0.25s ease,
+		background-color 0.2s ease,
+		right 0.2s ease-out;
+	cursor: var(--v-scroll-cursor-default, pointer);
 }
 
 /* 交互状态 */
 /* 1. 滚动时：滑块淡入，轨道位置保持 2px 间距 */
 v-scroll[data-scrolling]::part(thumb) {
-  opacity: 1;
+	opacity: 1;
 }
 
 /* 2. 悬停/拖拽时：轨道紧贴右侧 (right: 0) 并展开 */
 v-scroll[data-hovering-thumb]::part(bar),
 v-scroll[data-dragging]::part(bar) {
-  right: 0;
-  width: var(--v-scroll-track-expanded-width);
-  background: var(--v-scroll-track-bg);
-  border-left-color: var(--v-scroll-track-border-color);
-  pointer-events: auto;
+	right: 0;
+	width: var(--v-scroll-track-expanded-width);
+	background: var(--v-scroll-track-bg);
+	border-left-color: var(--v-scroll-track-border-color);
+	pointer-events: auto;
 }
 
 /* 滑块居中 */
 v-scroll[data-hovering-thumb]::part(thumb),
 v-scroll[data-dragging]::part(thumb) {
-  opacity: 1;
-  right: 5px;
+	opacity: 1;
+	right: 5px;
 }
 
 /* 悬停最浅 */
 v-scroll[data-hovering-thumb]::part(thumb) {
-  background: var(--v-scroll-thumb-bg-hover);
+	background: var(--v-scroll-thumb-bg-hover);
 }
 
 /* 拖拽最深：通过宿主状态控制，确保样式能正确命中 */
 v-scroll[data-dragging]::part(thumb) {
-  background: var(--v-scroll-thumb-bg-active);
-  cursor: var(--v-scroll-cursor-dragging, grabbing);
+	background: var(--v-scroll-thumb-bg-active);
+	cursor: var(--v-scroll-cursor-dragging, grabbing);
 }
