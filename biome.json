@@ -1,0 +1,85 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
+	"files": {
+		"includes": ["**", "!!dist", "!!node_modules"]
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noThenProperty": "error"
+			},
+			"style": {
+				"noShoutyConstants": "off",
+				"useBlockStatements": "error",
+				"useTemplate": "warn",
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{
+								"selector": { "kind": "variable" },
+								"formats": ["snake_case", "CONSTANT_CASE"]
+							},
+							{
+								"selector": { "kind": "const" },
+								"formats": ["CONSTANT_CASE", "snake_case"]
+							},
+							{
+								"selector": { "kind": "function" },
+								"formats": ["camelCase"]
+							},
+							{
+								"selector": {
+									"kind": "classProperty",
+									"modifiers": ["static"]
+								},
+								"formats": ["camelCase"]
+							},
+							{
+								"selector": { "kind": "classProperty" },
+								"match": ".*",
+								"formats": ["snake_case", "camelCase"]
+							},
+							{
+								"selector": { "kind": "classProperty" },
+								"match": "_(.+)",
+								"formats": ["snake_case", "camelCase"]
+							},
+							{
+								"selector": { "kind": "classMethod" },
+								"match": ".*",
+								"formats": ["snake_case", "camelCase"]
+							},
+							{
+								"selector": { "kind": "classMethod" },
+								"match": "_(.+)",
+								"formats": ["snake_case", "camelCase"]
+							}
+						]
+					}
+				}
+			},
+			"complexity": {
+				"noUselessThisAlias": "warn"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "asNeeded",
+			"arrowParentheses": "asNeeded",
+			"lineWidth": 100
+		}
+	}
+}

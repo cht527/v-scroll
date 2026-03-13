@@ -12,11 +12,12 @@
 	],
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
+		"build": "./build.sh",
 		"preview": "vite preview"
 	},
 	"devDependencies": {
-		"vite": "^7.0.0",
-		"lightningcss": "^1.24.0"
+		"@biomejs/biome": "^2.4.6",
+		"lightningcss": "^1.24.0",
+		"vite": "^7.0.0"
 	}
 }
