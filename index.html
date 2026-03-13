@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>v-scroll 演示</title>
-  <!-- 
-    Import Map 配置
-    注意：此处映射的是 $/ 到当前目录下的 theme/ 文件夹
-    因为部署时 index.html 和 dist 目录通常在同一级或配置为根目录
-  -->
   <script type="importmap">
     {
       "imports": {
@@ -76,7 +71,8 @@
   </v-scroll>
 </div>
 <script type="module">
-  import './dist/v-scroll.js';
+  // 指向源码，Vite 开发服务器会自动处理
+  import './src/main.js';
 </script>
 </body>
 </html>
