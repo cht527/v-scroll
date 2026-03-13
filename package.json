@@ -1,11 +1,10 @@
 {
-	"name": "v-scroll",
+	"name": "@caohaitao/v-scroll-bar",
 	"version": "1.0.0",
 	"type": "module",
 	"main": "./dist/v-scroll.js",
 	"exports": {
-		".": "./dist/v-scroll.js",
-		"./style": "./dist/v-scroll.css"
+		".": "./dist/v-scroll.js"
 	},
 	"files": [
 		"dist"
