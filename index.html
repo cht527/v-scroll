@@ -5,13 +5,13 @@
   <title>v-scroll 演示</title>
   <!-- 
     Import Map 配置
-    第三方用户可以通过修改这里来切换主题
-    例如将 "$/" 映射到 "/custom-theme/"
+    注意：此处映射的是 $/ 到当前目录下的 theme/ 文件夹
+    因为部署时 index.html 和 dist 目录通常在同一级或配置为根目录
   -->
   <script type="importmap">
     {
       "imports": {
-        "$/": "/dist/theme/" 
+        "$/": "./dist/theme/" 
       }
     }
   </script>
@@ -76,8 +76,7 @@
   </v-scroll>
 </div>
 <script type="module">
-  // 导入组件
-  import './src/main.js';
+  import './dist/v-scroll.js';
 </script>
 </body>
 </html>
